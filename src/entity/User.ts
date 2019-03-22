@@ -1,4 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
+import { type } from "os";
+import { Post } from "./Post";
 
 @Entity()
 export class User {
@@ -15,4 +17,6 @@ export class User {
     @Column()
     age: number;
 
+    @OneToMany(type => Post, post => post.user, {cascade: true})
+    posts: Post[];
 }

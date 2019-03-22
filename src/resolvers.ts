@@ -1,5 +1,6 @@
 import { getRepository } from "typeorm";
 import { User } from './entity/User';
+import { Post } from "./entity/Post";
 
 export const resoler = {
     Query: {
@@ -11,6 +12,10 @@ export const resoler = {
         user: async (_, {id}, __) => {
             const userRepository = getRepository(User);
             return await userRepository.findOne({id: parseInt(id)});
+        },
+        posts: async(_,__,___) => {
+            const postRepository = getRepository(Post);
+            return await postRepository.find();
         },
     },
     Mutation: {
@@ -42,8 +47,31 @@ export const resoler = {
             const userRepository = getRepository(User);
             const user = await userRepository.findOne({id:id});
             await userRepository.remove(user);
-            user.id = id;
-            return user;
+            return id;
+        },
+        addPost: async(_, {userId, title, content}) => {
+            const userRepository = getRepository(User);
+            const user = await userRepository.findOne({id: userId});
+            const post = new Post();
+            post.title = title;
+            post.content = content;
+            post.user = user;
+            await getRepository(Post).insert(post)
+            return post
+        },
+        deletePost: async(_,{id},__) => {
+            const postRepository = getRepository(Post);
+            const post = await postRepository.findOne({id:id});
+            if(post){
+                await postRepository.remove(post);
+            }
+            return id;
+        }
+    },
+    User: {
+        posts: async(user,_,__, ___) => {
+            const postRepository = getRepository(Post);
+            return await postRepository.find({user:user});
         },
     },
 };
