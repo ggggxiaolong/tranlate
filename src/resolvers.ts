@@ -41,7 +41,9 @@ export const resoler = {
         deleteUser: async(_, {id}, __) => {
             const userRepository = getRepository(User);
             const user = await userRepository.findOne({id:id});
-            return await userRepository.remove(user);
+            await userRepository.remove(user);
+            user.id = id;
+            return user;
         },
     },
 };
