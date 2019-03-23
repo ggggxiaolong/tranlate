@@ -19,12 +19,8 @@ export const resoler = {
         },
     },
     Mutation: {
-        addUser: async (_, {firstName, lastName, age}, __) => {
+        async addUser(parent, {user}, context, info){
             const userRepository = getRepository(User);
-            const user = new User();
-            user.firstName = firstName;
-            user.lastName = lastName;
-            user.age = age;
             await userRepository.insert(user);
             return user;
         },
@@ -49,12 +45,9 @@ export const resoler = {
             await userRepository.remove(user);
             return id;
         },
-        addPost: async(_, {userId, title, content}) => {
-            const userRepository = getRepository(User);
-            const user = await userRepository.findOne({id: userId});
-            const post = new Post();
-            post.title = title;
-            post.content = content;
+        addPost: async(_, {post}) => {
+            const user = new User();
+            user.id = post.userId;
             post.user = user;
             await getRepository(Post).insert(post)
             return post

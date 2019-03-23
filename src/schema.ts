@@ -1,23 +1,6 @@
 import { gql} from 'apollo-server';
 
 export const typeDef = gql`
-type Query {
-    users: [User!]!
-    user(id: ID!): User!
-    posts: [Post]!
-}
-
-type Mutation {
-    addUser(firstName: String, lastName: String, age: Int): User!
-
-    deleteUser(id: ID!): User!
-
-    updateUser(id: ID!, firstName: String, lastName: String, age: Int): ID!
-
-    addPost(userId: ID, title: String!, content: String): Post!
-
-    deletePost(id: ID!): ID!
-}
 
 type User {
     id: ID!
@@ -31,5 +14,36 @@ type Post {
     id: ID!
     title: String!
     content: String
+}
+
+type Query {
+    users: [User!]!
+    user(id: ID!): User!
+    posts: [Post]!
+}
+
+input AddUser{
+    firstName: String
+    lastName: String
+    age: Int
+}
+
+input AddPost{
+    userId: ID!
+    title: String!
+    content: String
+}
+
+type Mutation {
+    
+    addUser(user: AddUser!): User!
+
+    deleteUser(id: ID!): ID!
+
+    updateUser(id: ID!, firstName: String, lastName: String, age: Int): ID!
+
+    addPost(post: AddPost!): Post!
+
+    deletePost(id: ID!): ID!
 }
 `;
